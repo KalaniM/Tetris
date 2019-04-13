@@ -4,11 +4,6 @@ const context = canvas.getContext('2d'); //Le contexte à dessiner
 context.scale(20, 20); //Pour que les éléments soient plus gros, sinon ils sont tout pitits
 
 
-const matrix = [ //La première de nos pièces, en T
-  [0, 0, 0],
-  [1, 1, 1],
-  [0, 1, 0], // Représentée par deux valeurs
-];
 
 function collide(arena, player) { // Gerer les collisions murs et sol
   const [m, o] = [player.matrix, player.pos];
@@ -32,7 +27,15 @@ function createMatrix(w, h) {
   return matrix;
 }
 
-function craetePieces
+function createPieces(type) {
+  if (type === 'T') {
+    return [ //La première de nos pièces, en T
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 1, 0], // Représentée par deux valeurs
+    ];
+  }
+}
 
 function draw() {
   context.fillStyle = '#000'; //La couleur noire bg (oui c'est de toi que je parle)
@@ -142,7 +145,7 @@ const arena = createMatrix(12, 20); // 20 d'unités et 12 en étendue
 
 const player = {
   pos : {x:5, y:-1},
-  matrix: matrix,
+  matrix: createPieces('T'),
 }
 
 document.addEventListener('keydown', event => {
