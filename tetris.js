@@ -10,6 +10,14 @@ const matrix = [ //La première de nos pièces, en T
   [0, 1, 0], //Représentée par deux valeurs
 ];
 
+function createMatrix(w, h) {
+  const matrix = [];
+  while (h--) { // Tant que h !== 0 alors on enlève 1 à h
+    matrix.push(new Array(w).fill(0));
+  }
+  return matrix;
+}
+
 function draw() {
 
   context.fillStyle = '#000'; //La couleur noire bg (oui c'est de toi que je parle)
@@ -33,6 +41,11 @@ function drawMatrix(matrix, offset) {
   });
 }
 
+function playerDrop() {
+  player.pos.y++; //Plonge plus vite
+  dropCounter = 0; //Reinit pour obtenir le délai d'1 sec
+}
+
 let dropCounter = 0;
 let dropInterval = 1000; 
 
@@ -40,21 +53,34 @@ let lastTime = 0;
 function update(time = 0) { // L'animation se répète
   const deltaTime = time - lastTime;
   lastTime = time;
+  // L'animation dure 1 seconde
 
   dropCounter += deltaTime;
   if (dropCounter > dropInterval) {
-    player.pos.y++;
-    dropCounter = 0;
+    playerDrop()
   }
 
   draw();
   requestAnimationFrame(update);
 }
 
+const arena = createMatrix(12, 20); // 20 d'unités et 12 en étendue
+// console.log(arena); console.table(arena);
 
 const player = {
   pos : {x:5, y:5},
   matrix: matrix,
 }
+
+document.addEventListener('keydown', event => {
+  if (event.keyCode === 37) {
+     player.pos.x--; //Se déplace à gauche
+  } else if (event.keyCode === 39) {
+     player.pos.x++; //Se déplace à droite
+  } else if (event.keyCode === 40) {
+    playerDrop();
+    
+  }
+});
 
 update();
