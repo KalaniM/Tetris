@@ -32,6 +32,8 @@ function createMatrix(w, h) {
   return matrix;
 }
 
+function craetePieces
+
 function draw() {
   context.fillStyle = '#000'; //La couleur noire bg (oui c'est de toi que je parle)
   context.fillRect(0, 0, canvas.width, canvas.height); //width et height définies en html
@@ -82,7 +84,18 @@ function playerMove(dir) {
 }
 
 function playerRotate(dir) {
-  rotate(player.matrix, dir);
+  const pos = player.pos.x;
+  rotate(player.matrix, dir); // Rotation de la pièce
+  let offset = 1;             
+  while (collide(arena, player)) { // Gerer les coll pendant la rotation
+    player.pos.x += offset;
+    offset = -(offset + (offset > 0 ? 1 : -1)); // Si o = 0 alors coll il y a -> On retourne de nouveau la pièce pour ne pas qu'elle passe à travers le mur
+    if (offset > player.matrix[0].length) { // La direction de la rotation est la constante malgré la collision
+      rotate(player.matrix, -dir);
+      player.pos.x = pos;
+      return;
+    }
+  }
 }
 
 function rotate(matrix, dir) { // Faire tourner les pièces
