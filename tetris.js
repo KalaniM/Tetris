@@ -7,8 +7,21 @@ context.scale(20, 20); //Pour que les éléments soient plus gros, sinon ils son
 const matrix = [ //La première de nos pièces, en T
   [0, 0, 0],
   [1, 1, 1],
-  [0, 1, 0], //Représentée par deux valeurs
+  [0, 1, 0], // Représentée par deux valeurs
 ];
+
+function collide(arena, player) { // Gerer les collisions
+  const [m, o] = [player.matrix, player.pos];
+  for (let y = 0; y < m.length; ++y) {
+    for (let x  = 0; x< m[y].length; ++x) {
+      if (m[y][x] )== 0 &&
+      (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+        return true; // Collision il y a
+      }
+    }
+  }
+  return false; // Il n'y a pas collision
+}
 
 function createMatrix(w, h) {
   const matrix = [];
@@ -36,6 +49,16 @@ function drawMatrix(matrix, offset) {
                           y + offset.y,
                           1, 1);
         //Dimensions de la pièce
+      }
+    });
+  });
+}
+
+function merge(arena, player) {
+  player.matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        arena[y + player.pos.y][x + player.pos.x] = value;
       }
     });
   });
