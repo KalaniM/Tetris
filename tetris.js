@@ -3,7 +3,22 @@ const context = canvas.getContext('2d'); //Le contexte à dessiner
 
 context.scale(20, 20); //Pour que les éléments soient plus gros, sinon ils sont tout pitits
 
+function arenaSweep() { // Supp une ligne une fois complète
+  let rowCount = 1;
+  outer : for (let y = arena.length - 1; y > 0; y--) {
+    for (let x = 0; x < arena[y].length; x++) {
+      if (arena[y][x] === 0) { // Si une ligne n'est pas complète on continue
+        continue outer;
+      }
+    }
+    const row = arena.splice(y, 1)[0].fill(0); // Si une ligne est complète on la fait disparaitre
+    arena.unshift(row); //La ligne est rajoutée au dessus
+    y++;
 
+    player.score += rowCount * 10;
+    rowCount *= 2;
+  }
+}
 
 function collide(arena, player) { // Gerer les collisions murs et sol
   const [m, o] = [player.matrix, player.pos];
@@ -111,6 +126,8 @@ function playerDrop() {
     player.pos.y--; // Si il y a coll avec le sol
     merge(arena, player); // Actualisation de l'arène
     playerReset(); // Nouvelle pièce tombe
+    arenaSweep(); // Actu des lignes de jeu
+    updateScore();
   }
   dropCounter = 0; //Reinit pour obtenir le délai d'1 sec
 }
@@ -130,6 +147,8 @@ function playerReset() {
                   (player.matrix[0].length / 2 | 0);
   if (collide(arena, player)) { // Si coll avec le plafond
     arena.forEach(row => row.fill(0)); // L'arène est réinitialisée
+    player.score = 0;
+    updateScore();
   }
 }
 
@@ -187,6 +206,10 @@ function update(time = 0) { // L'animation se répète
   requestAnimationFrame(update);
 }
 
+function updateScore() {
+  document.getElementById('score').innerHTML = player.score;
+}
+
 const colors = [
   null,
   "red",
@@ -202,8 +225,9 @@ const arena = createMatrix(12, 20); // 20 d'unités et 12 en étendue
 // console.log(arena); console.table(arena);
 
 const player = {
-  pos : {x:5, y:-1},
-  matrix: createPieces('T'),
+  pos : {x:0, y:0},
+  matrix: null,
+  score: 0,
 }
 
 document.addEventListener('keydown', event => {
@@ -224,4 +248,6 @@ document.addEventListener('keydown', event => {
   }
 });
 
+playerReset();
+updateScore();
 update();
