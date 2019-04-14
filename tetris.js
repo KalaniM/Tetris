@@ -212,13 +212,13 @@ function updateScore() {
 
 const colors = [
   null,
-  "red",
-  "blue",
-  "violet",
-  "green",
-  "blueviolet",
-  "orange",
-  "yellow",
+  "#23967F",
+  "#75B8C8",
+  "#FFC145",
+  "#FFFFFB",
+  "#FF6B6C",
+  "#DB93B0",
+  "#4FCDFF",
 ];
 
 const arena = createMatrix(12, 20); // 20 d'unités et 12 en étendue
