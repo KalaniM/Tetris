@@ -36,38 +36,38 @@ function createPieces(type) {
     ];
   } else if (type === 'O') {
     return [ // Une pièce en O
-      [1, 1],
-      [1, 1],
+      [2, 2],
+      [2, 2],
     ];
   } else if (type === 'L') {
     return [ // Une pièce en L
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 1],
+      [0, 3, 0],
+      [0, 3, 0],
+      [0, 3, 3],
     ];
   } else if (type === 'J') {
     return [ // Une pièce en J
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0],
+      [0, 4, 0],
+      [0, 4, 0],
+      [4, 4, 0],
     ];
   } else if (type === 'I') {
     return [ // Une pièce en I
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0], //Une matrice plus grande pour anticiper la rotation
+      [0, 5, 0, 0],
+      [0, 5, 0, 0],
+      [0, 5, 0, 0],
+      [0, 5, 0, 0], //Une matrice plus grande pour anticiper la rotation
     ];
   } else if (type === 'S') {
     return [ // Une pièce en S
-      [0, 1, 1],
-      [1, 1, 0],
+      [0, 6, 6],
+      [6, 6, 0],
       [0, 0, 0],
     ];
   } else if (type === 'Z') {
     return [ // Une pièce en Z
-      [1, 1, 0],
-      [0, 1, 1],
+      [7, 7, 0],
+      [0, 7, 7],
       [0, 0, 0],
     ];
   }
@@ -85,7 +85,7 @@ function drawMatrix(matrix, offset) {
   matrix.forEach((row, y) => { //Sélectionner chaques lignes
     row.forEach((value, x) => { //Sélectionner chaque carrés
       if (value !== 0) { //Si le carré = 1 la pièce est présente
-        context.fillStyle = 'red'; //Alors la pièce est appelée en rouge
+        context.fillStyle = colors[value]; //Alors la pièce est appelée selon la couleur de sa valeur
         context.fillRect(x + offset.x,
                           y + offset.y,
                           1, 1);
@@ -128,6 +128,9 @@ function playerReset() {
   player.pos.y = 0;
   player.pos.x = (arena[0] .length / 2 | 0) -
                   (player.matrix[0].length / 2 | 0);
+  if (collide(arena, player)) { // Si coll avec le plafond
+    arena.forEach(row => row.fill(0)); // L'arène est réinitialisée
+  }
 }
 
 function playerRotate(dir) {
@@ -183,6 +186,17 @@ function update(time = 0) { // L'animation se répète
   draw();
   requestAnimationFrame(update);
 }
+
+const colors = [
+  null,
+  "red",
+  "blue",
+  "violet",
+  "green",
+  "blueviolet",
+  "orange",
+  "yellow",
+];
 
 const arena = createMatrix(12, 20); // 20 d'unités et 12 en étendue
 // console.log(arena); console.table(arena);
