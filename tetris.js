@@ -34,6 +34,42 @@ function createPieces(type) {
       [1, 1, 1],
       [0, 1, 0], // Représentée par deux valeurs
     ];
+  } else if (type === 'O') {
+    return [ // Une pièce en O
+      [1, 1],
+      [1, 1],
+    ];
+  } else if (type === 'L') {
+    return [ // Une pièce en L
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 1, 1],
+    ];
+  } else if (type === 'J') {
+    return [ // Une pièce en J
+      [0, 1, 0],
+      [0, 1, 0],
+      [1, 1, 0],
+    ];
+  } else if (type === 'I') {
+    return [ // Une pièce en I
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0], //Une matrice plus grande pour anticiper la rotation
+    ];
+  } else if (type === 'S') {
+    return [ // Une pièce en S
+      [0, 1, 1],
+      [1, 1, 0],
+      [0, 0, 0],
+    ];
+  } else if (type === 'Z') {
+    return [ // Une pièce en Z
+      [1, 1, 0],
+      [0, 1, 1],
+      [0, 0, 0],
+    ];
   }
 }
 
@@ -74,7 +110,7 @@ function playerDrop() {
   if (collide(arena, player)) {
     player.pos.y--; // Si il y a coll avec le sol
     merge(arena, player); // Actualisation de l'arène
-    player.pos.y = 0; // Nouvelle pièce tombe
+    playerReset(); // Nouvelle pièce tombe
   }
   dropCounter = 0; //Reinit pour obtenir le délai d'1 sec
 }
@@ -84,6 +120,14 @@ function playerMove(dir) {
   if (collide(arena, player)) {
     player.pos.x -= dir;
   }
+}
+
+function playerReset() {
+  const pieces = "ILOJZST";
+  player.matrix = createPieces(pieces[pieces.length * Math.random() | 0]);
+  player.pos.y = 0;
+  player.pos.x = (arena[0] .length / 2 | 0) -
+                  (player.matrix[0].length / 2 | 0);
 }
 
 function playerRotate(dir) {
